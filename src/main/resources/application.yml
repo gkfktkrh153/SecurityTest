@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    #        H2
+    url: jdbc:h2:tcp://localhost/~/db/basicSecurity
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        #       show_sql: true
+        format_sql: true # 쿼리 다문장 확인
+        use_sql_comments: true  # 실행되는 jpql 확인
