@@ -49,7 +49,7 @@ public class MemberController {
 
     @PostMapping("logout")
     public String logout(HttpServletRequest request) {
-        sessionManager.sessionExpire(request); //(1)
-        return "redirect:/"; //(2)
+        sessionManager.sessionExpire(request);
+        return "redirect:/";
     }
 }
