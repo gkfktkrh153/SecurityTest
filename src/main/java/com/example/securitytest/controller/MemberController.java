@@ -22,7 +22,6 @@ import java.util.Optional;
 public class MemberController {
     private final SessionManager sessionManager;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
         Member member = sessionManager.getSession(request);
@@ -45,6 +44,16 @@ public class MemberController {
 
         sessionManager.createSession(loginMember, response); // 세션 생성
 
+        return "redirect:/"; // 세션이 존재하므로 home으로 이동
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if(session == null) {
+            return "redirect:/";
+        }
+        session.invalidate();
         return "redirect:/";
     }
 }
