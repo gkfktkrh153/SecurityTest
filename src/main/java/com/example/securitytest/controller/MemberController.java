@@ -47,13 +47,9 @@ public class MemberController {
         return "redirect:/"; // 세션이 존재하므로 home으로 이동
     }
 
-    @PostMapping("/logout")
+    @PostMapping("logout")
     public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if(session == null) {
-            return "redirect:/";
-        }
-        session.invalidate();
-        return "redirect:/";
+        sessionManager.sessionExpire(request); //(1)
+        return "redirect:/"; //(2)
     }
 }
