@@ -25,16 +25,10 @@ public class MemberController {
     private final MemberRepository memberRepository;
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
-        String username = sessionManager.getSession(request);
-        // 세션이 존재한다면 세션에 저장되있는 member의 username조회
+        Member member = sessionManager.getSession(request);
+        // 세션이 존재한다면 세션에 저장되있는 member조회
 
-        if(username == null) { // 아직 인증 X
-            return "login";
-        }
-
-        Member member = memberRepository.findByUsername(username).orElse(null);
-
-        if(member == null) { // 아이디가 삭제된경우!?
+        if(member == null) { // 아직 인증 X
             return "login";
         }
 
@@ -49,7 +43,7 @@ public class MemberController {
         if(loginMember == null) // 로그인 실패
             return "redirect:/"; // 세션없이 홈으로 이동 -> 로그인 페이지 이동
 
-        sessionManager.createSession(loginMember.getUsername(), response); // 세션 생성
+        sessionManager.createSession(loginMember, response); // 세션 생성
 
         return "redirect:/";
     }
