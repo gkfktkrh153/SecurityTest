@@ -1,5 +1,6 @@
 package com.example.securitytest.controller;
 
+import com.example.securitytest.Session;
 import com.example.securitytest.SessionManager;
 import com.example.securitytest.entity.Member;
 import com.example.securitytest.entity.dto.MemberDto;
@@ -24,14 +25,14 @@ public class MemberController {
     private final MemberService memberService;
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
-        Member member = sessionManager.getSession(request);
-        // 세션이 존재한다면 세션에 저장되있는 member조회
+        Session session = sessionManager.getSession(request);
 
-        if(member == null) { // 아직 인증 X
+        if(session == null) { // 아직 인증 X
             return "login";
         }
 
-        model.addAttribute("member", member);
+        Member loginMember = (Member) session.getAttribute("LOGIN_MEMBER");
+        model.addAttribute("member", loginMember);
         return "home";
     }
 
@@ -42,7 +43,8 @@ public class MemberController {
         if(loginMember == null) // 로그인 실패
             return "redirect:/"; // 세션없이 홈으로 이동 -> 로그인 페이지 이동
 
-        sessionManager.createSession(loginMember, response); // 세션 생성
+        Session session = sessionManager.createSession(loginMember, response);// 세션 생성
+        session.setAttribute("LOGIN_MEMBER", loginMember);
 
         return "redirect:/"; // 세션이 존재하므로 home으로 이동
     }
