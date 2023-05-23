@@ -30,15 +30,19 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and();
+        http.cors()
+        .and()
+        .csrf().disable();
         http
-                .formLogin()
-                .loginPage("/login")
-                .and()
                 .authorizeRequests()
                 .requestMatchers("/login").permitAll()
-                .anyRequest().authenticated(); // 이 밖에 모든 요청에 대해 인증을 필요로함
-
+                .anyRequest().authenticated() // 이 밖에 모든 요청에 대해 인증을 필요로함
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/login_proc")
+                .defaultSuccessUrl("/main")
+                .permitAll();
         return http.build();
     }
 

@@ -29,25 +29,8 @@ public class MemberController {
         return "home";
     }
     @GetMapping("/login")
-    public String login(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
-
-        if(session == null) { // 아직 인증 X
-            return "login";
-        }
-        return "home";
-    }
-
-    @PostMapping("/login")
-    public String login(@ModelAttribute MemberDto memberDto, HttpServletResponse response, HttpServletRequest request){
-        Member loginMember = memberService.login(memberDto);
-
-        if(loginMember == null) // 로그인 실패
-            return "redirect:/"; // 세션없이 홈으로 이동 -> 로그인 페이지 이동
-        HttpSession session = request.getSession();
-        session.setAttribute("LOGIN_MEMBER", loginMember);
-
-        return "redirect:/"; // 세션이 존재하므로 home으로 이동
+    public String login_form(HttpServletRequest request, Model model) {
+        return "login";
     }
 
     @PostMapping("logout")
