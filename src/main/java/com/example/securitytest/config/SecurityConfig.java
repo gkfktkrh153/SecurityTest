@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/login_proc")
-                .defaultSuccessUrl("/main")
+                .defaultSuccessUrl("/")
                 .permitAll();
         return http.build();
     }
