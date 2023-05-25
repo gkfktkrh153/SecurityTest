@@ -18,7 +18,7 @@ public class MemberController {
 
     @GetMapping("/")
     public String home(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+
 
         if(session == null) { // 아직 인증 X
             return "login";
@@ -28,15 +28,5 @@ public class MemberController {
         model.addAttribute("member", loginMember);
         return "home";
     }
-    @GetMapping("/login")
-    public String login_form(HttpServletRequest request, Model model) {
-        return "login";
-    }
 
-    @PostMapping("logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return "redirect:/";
-    }
 }
