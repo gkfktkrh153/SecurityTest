@@ -28,9 +28,7 @@ public class MemberController {
     private final SessionRegistry sessionRegistry;
 
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model, HttpSession session) {
-        List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
-
+    public String home(HttpServletRequest request, Model model) {
         // 각 Principal(사용자)에 대한 세션 정보를 가져옵니다.
         for (Object principal : allPrincipals) {
             if (principal instanceof UserDetails) {
@@ -42,15 +40,5 @@ public class MemberController {
         }
         return "home";
     }
-    @GetMapping("/login")
-    public String login_form(HttpServletRequest request, Model model) {
-        return "login";
-    }
 
-    @PostMapping("logout")
-    public String logout(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        session.invalidate();
-        return "redirect:/";
-    }
 }
