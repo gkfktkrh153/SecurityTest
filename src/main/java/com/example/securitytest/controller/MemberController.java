@@ -7,25 +7,43 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
     private final MemberService memberService;
+    private final SessionRegistry sessionRegistry;
 
     @GetMapping("/")
-    public String home(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession();
+    public String home(HttpServletRequest request, Model model, HttpSession session) {
+        List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
 
-        if(session == null) { // 아직 인증 X
-            return "login";
+        // 세션 정보를 담을 리스트를 생성합니다.
+        List<SessionInformation> sessionInformationList = new ArrayList<>();
+
+        // 각 Principal(사용자)에 대한 세션 정보를 가져옵니다.
+        for (Object principal : allPrincipals) {
+            if (principal instanceof UserDetails) {
+                UserDetails userDetails = (UserDetails) principal;
+                // 현재 사용자의 모든 세션 정보를 가져옵니다.
+                List<SessionInformation> sessions = sessionRegistry.getAllSessions(userDetails, false);
+                sessions.stream().forEach(s-> log.info( +" : "+ s.getSessionId()));
+                sessionInformationList.add("username", userDetails.getUsername())
+            }
         }
-
-        Member loginMember = (Member) session.getAttribute("LOGIN_MEMBER");
-        model.addAttribute("member", loginMember);
         return "home";
     }
     @GetMapping("/login")
