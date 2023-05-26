@@ -31,17 +31,13 @@ public class MemberController {
     public String home(HttpServletRequest request, Model model, HttpSession session) {
         List<Object> allPrincipals = sessionRegistry.getAllPrincipals();
 
-        // 세션 정보를 담을 리스트를 생성합니다.
-        List<SessionInformation> sessionInformationList = new ArrayList<>();
-
         // 각 Principal(사용자)에 대한 세션 정보를 가져옵니다.
         for (Object principal : allPrincipals) {
             if (principal instanceof UserDetails) {
                 UserDetails userDetails = (UserDetails) principal;
                 // 현재 사용자의 모든 세션 정보를 가져옵니다.
                 List<SessionInformation> sessions = sessionRegistry.getAllSessions(userDetails, false);
-                sessions.stream().forEach(s-> log.info( +" : "+ s.getSessionId()));
-                sessionInformationList.add("username", userDetails.getUsername())
+                sessions.stream().forEach(s-> log.info(userDetails.getUsername()+" : "+ s.getSessionId()));
             }
         }
         return "home";

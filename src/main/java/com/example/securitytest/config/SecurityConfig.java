@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .permitAll();
         http.sessionManagement()
                 .sessionFixation()
-                .none()
+                .newSession()
                 .maximumSessions(2);
         return http.build();
     }
